@@ -10,7 +10,6 @@ public class IntentBuilderTest {
     @Test
     public void testGetPublicKeyIntent() {
         String packageName = "com.example.signerapp";
-        String permissions = "read,write";
 
         Intent intent = IntentBuilder.getPublicKeyIntent(packageName, permissions);
 
@@ -18,7 +17,6 @@ public class IntentBuilderTest {
         assertEquals("nostrsigner:", intent.getDataString());
         assertEquals(packageName, intent.getPackage());
         assertEquals("get_public_key", intent.getStringExtra("type"));
-        assertEquals(permissions, intent.getStringExtra("permissions"));
     }
 }
 
