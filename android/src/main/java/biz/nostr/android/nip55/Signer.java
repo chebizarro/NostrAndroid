@@ -1,4 +1,4 @@
-package biz.nostr.nip55;
+package biz.nostr.android.nip55;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -11,7 +11,6 @@ import android.net.Uri;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class Signer {
     public static List<ResolveInfo> isExternalSignerInstalled(Context context, String packageName) {
@@ -187,6 +186,27 @@ public class Signer {
         }
         result.close();
         return decryptedEventJson;
+    }
+
+    public static String getRelays(Context context, String packageName, String loggedInUserNpub) {
+        ContentResolver contentResolver = context.getContentResolver();
+        Uri uri = Uri.parse("content://" + packageName + ".GET_RELAYS");
+        String[] projection = new String[] { loggedInUserNpub };
+        Cursor result = contentResolver.query(uri, projection, null, null, null);
+
+        if (result == null) {
+            return null;
+        }
+
+        String relayJson = null;
+        if (result.moveToFirst()) {
+            int index = result.getColumnIndex("signature");
+            if (index >= 0) {
+                relayJson = result.getString(index);
+            }
+        }
+        result.close();
+        return relayJson;
     }
 
 }

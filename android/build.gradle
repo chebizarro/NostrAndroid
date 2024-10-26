@@ -1,0 +1,78 @@
+plugins {
+    alias(libs.plugins.android.library)
+    id 'maven-publish'
+}
+
+group = 'biz.nostr'
+version = '1.0.0'
+
+android {
+    namespace 'biz.nostr.android'
+    compileSdk 34
+
+    defaultConfig {
+        minSdk 24
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = group
+            artifactId = 'nostr-android'
+            version = version
+
+            pom {
+                name = 'NIP-55 Android Library'
+                description = 'An Android library implementing NIP-55 for Nostr.'
+                url = 'https://github.com/chebizarro/NostrAndroid'
+
+                licenses {
+                    license {
+                        name = 'MIT License'
+                        url = 'https://opensource.org/licenses/MIT'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'chebizarro'
+                        name = 'Biz'
+                        email = 'chebizarro@protonmail.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/chebizarro/NostrAndroid.git'
+                    developerConnection = 'scm:git:ssh://github.com/chebizarro/NostrAndroid.git'
+                    url = 'https://github.com/chebizarro/NostrAndroid'
+                }
+            }
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
+}
+
+
+dependencies {
+
+    implementation libs.appcompat
+    implementation libs.material
+    testImplementation libs.junit
+    androidTestImplementation libs.ext.junit
+    androidTestImplementation libs.espresso.core
+}

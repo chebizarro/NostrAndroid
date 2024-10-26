@@ -1,4 +1,4 @@
-package biz.nostr.nip55;
+package biz.nostr.android.nip55;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -71,5 +71,14 @@ public class IntentBuilder {
             intent.putExtra("id", id);
             intent.putExtra("current_user", npub);
             return intent;
+    }
+
+    public static Intent getRelaysIntent(String signerPackageName, String id, String npub) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("nostrsigner:"));
+        intent.setPackage(signerPackageName);
+        intent.putExtra("type", "get_relays");
+        intent.putExtra("id", id);
+        intent.putExtra("current_user", npub);
+        return intent;
     }
 }

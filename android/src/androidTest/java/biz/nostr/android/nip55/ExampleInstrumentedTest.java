@@ -1,4 +1,4 @@
-package biz.nostr.nip55;
+package biz.nostr.android.nip55;
 
 import android.content.Context;
 

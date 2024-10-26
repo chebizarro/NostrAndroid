@@ -32,7 +32,7 @@ Add the library to your project's `build.gradle` dependencies:
 
 ```gradle
 dependencies {
-    implementation 'biz.nostr:nostr-android-library:1.0.0'
+    implementation 'biz.nostr:nip55:1.0.0'
 }
 ```
 
@@ -142,7 +142,7 @@ Contributions are welcome! If you'd like to contribute to this project, please f
 2. **Clone Your Fork**:
 
    ```bash
-   git clone https://github.com/yourusername/nostr-android-library.git
+   git clone https://github.com/yourusername/NostrAndroid.git
    cd nostr-android-library
    ```
 
@@ -174,13 +174,13 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ---
 
-**Note**: For any issues or questions, please open an issue on the [GitHub repository](https://github.com/chebizarro/nostr-android-library/issues).
+**Note**: For any issues or questions, please open an issue on the [GitHub repository](https://github.com/chebizarro/NostrAndroid/issues).
 
 ## Additional Information
 
 ### Dependencies
 
-- **Android SDK**: API Level 21 or higher
+- **Android SDK**: API Level 24 or higher
 - **Java Version**: Java 8 or higher
 
 ### Supported Platforms
@@ -199,7 +199,7 @@ If you need to build the library locally:
 1. **Clone the Repository**:
 
    ```bash
-   git clone https://github.com/chebizarro/nostr-android-library.git
+   git clone https://github.com/chebizarro/NostrAndroid.git
    cd nostr-android-library
    ```
 
