@@ -14,7 +14,7 @@ import java.util.List;
 
 
 public class Signer {
-    List<ResolveInfo> isExternalSignerInstalled(Context context, String packageName) {
+    public static List<ResolveInfo> isExternalSignerInstalled(Context context, String packageName) {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
         intent.setData(Uri.parse("nostrsigner:"));
@@ -25,7 +25,7 @@ public class Signer {
         return packageManager.queryIntentActivities(intent, 0);
     }
 
-    List<AppInfo> getInstalledSignerApps(Context context) {
+    public static List<AppInfo> getInstalledSignerApps(Context context) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse("nostrsigner:"));
         PackageManager packageManager = context.getPackageManager();
@@ -42,7 +42,7 @@ public class Signer {
         return appsArray;
     }
 
-    public String getPublicKey(Context context, String packageName) {
+    public static String getPublicKey(Context context, String packageName) {
         ContentResolver contentResolver = context.getContentResolver();
         Uri uri = Uri.parse("content://" + packageName + ".GET_PUBLIC_KEY");
         String[] projection = new String[] { "login" };
@@ -61,7 +61,7 @@ public class Signer {
         return npub;
     }
 
-    public String[] signEvent(Context context, String packageName, String eventJson, String loggedInUserNpub) {
+    public static String[] signEvent(Context context, String packageName, String eventJson, String loggedInUserNpub) {
         Uri uri = Uri.parse("content://" + packageName + ".SIGN_EVENT");
         String[] projection = new String[] { eventJson, "", loggedInUserNpub };
         ContentResolver contentResolver = context.getContentResolver();
@@ -84,7 +84,7 @@ public class Signer {
         return signedEvent;
     }
 
-    public String nip04Encrypt(Context context, String packageName, String plainText, String recipientPubKey, String loggedInUserNpub) {
+    public static String nip04Encrypt(Context context, String packageName, String plainText, String recipientPubKey, String loggedInUserNpub) {
         ContentResolver contentResolver = context.getContentResolver();
         Uri uri = Uri.parse("content://" + packageName + ".NIP04_ENCRYPT");
         String[] projection = new String[] { plainText, recipientPubKey, loggedInUserNpub };
@@ -105,7 +105,7 @@ public class Signer {
         return encryptedText;
     }
 
-    public String nip04Decrypt(Context context, String packageName, String encryptedText, String senderPubKey, String loggedInUserNpub) {
+    public static String nip04Decrypt(Context context, String packageName, String encryptedText, String senderPubKey, String loggedInUserNpub) {
         ContentResolver contentResolver = context.getContentResolver();
         Uri uri = Uri.parse("content://" + packageName + ".NIP04_DECRYPT");
         String[] projection = new String[] { encryptedText, senderPubKey, loggedInUserNpub };
@@ -126,7 +126,7 @@ public class Signer {
         return decryptedText;
     }
 
-    public String nip44Encrypt(Context context, String packageName, String plainText, String recipientPubKey, String loggedInUserNpub) {
+    public static String nip44Encrypt(Context context, String packageName, String plainText, String recipientPubKey, String loggedInUserNpub) {
         ContentResolver contentResolver = context.getContentResolver();
         Uri uri = Uri.parse("content://" + packageName + ".NIP44_ENCRYPT");
         String[] projection = new String[] { plainText, recipientPubKey, loggedInUserNpub };
@@ -147,7 +147,7 @@ public class Signer {
         return encryptedText;
     }
 
-    public String nip44Decrypt(Context context, String packageName, String encryptedText, String senderPubKey, String loggedInUserNpub) {
+    public static String nip44Decrypt(Context context, String packageName, String encryptedText, String senderPubKey, String loggedInUserNpub) {
         ContentResolver contentResolver = context.getContentResolver();
         Uri uri = Uri.parse("content://" + packageName + ".NIP44_DECRYPT");
         String[] projection = new String[] { encryptedText, senderPubKey, loggedInUserNpub };
@@ -168,7 +168,7 @@ public class Signer {
         return decryptedText;
     }
 
-    public String decryptZapEvent(Context context, String packageName, String eventJson, String loggedInUserNpub) {
+    public static String decryptZapEvent(Context context, String packageName, String eventJson, String loggedInUserNpub) {
         ContentResolver contentResolver = context.getContentResolver();
         Uri uri = Uri.parse("content://" + packageName + ".DECRYPT_ZAP_EVENT");
         String[] projection = new String[] { eventJson, "", loggedInUserNpub };
