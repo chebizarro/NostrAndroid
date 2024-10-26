@@ -25,18 +25,18 @@ public class Signer {
         return packageManager.queryIntentActivities(intent, 0);
     }
 
-    List<SignerAppInfo> getInstalledSignerApps(Context context) {
+    List<AppInfo> getInstalledSignerApps(Context context) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse("nostrsigner:"));
         PackageManager packageManager = context.getPackageManager();
 
         List<ResolveInfo> resolveInfos = isExternalSignerInstalled(context, null);
-        List<SignerAppInfo> appsArray = new ArrayList<SignerAppInfo>();
+        List<AppInfo> appsArray = new ArrayList<>();
         for (ResolveInfo resolveInfo : resolveInfos) {
             CharSequence appName = resolveInfo.loadLabel(packageManager);
             String packageName = resolveInfo.activityInfo.packageName;
             Drawable iconDrawable = resolveInfo.loadIcon(packageManager);
-            SignerAppInfo appInfo = new SignerAppInfo(appName, packageName, iconDrawable);
+            AppInfo appInfo = new AppInfo(appName, packageName, iconDrawable);
             appsArray.add(appInfo);
         }
         return appsArray;

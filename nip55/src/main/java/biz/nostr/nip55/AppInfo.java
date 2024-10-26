@@ -35,6 +35,35 @@ public class AppInfo {
         return bitmapToBase64(bitmap);
     }
 
+    private byte[] drawableToByteArray(Drawable drawable) {
+        Bitmap bitmap = drawableToBitmap(drawable);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        // Compress the bitmap to PNG format
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+        return outputStream.toByteArray();
+    }
+
+    private Bitmap drawableToBitmap(Drawable drawable) {
+        if (drawable instanceof android.graphics.drawable.BitmapDrawable) {
+            return ((android.graphics.drawable.BitmapDrawable) drawable).getBitmap();
+        }
+
+        // Create a bitmap with the drawable's dimensions
+        Bitmap bitmap = Bitmap.createBitmap(
+                drawable.getIntrinsicWidth(),
+                drawable.getIntrinsicHeight(),
+                Bitmap.Config.ARGB_8888
+        );
+
+        // Draw the drawable onto the bitmap
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+
+        return bitmap;
+    }
+
+
     private String bitmapToBase64(Bitmap bitmap) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
