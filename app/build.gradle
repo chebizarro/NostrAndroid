@@ -3,12 +3,14 @@ plugins {
 }
 
 android {
-    namespace 'biz.nostr'
-    compileSdk 34
+    namespace 'biz.nostr.android.demo'
+    compileSdk 30
 
     defaultConfig {
         applicationId "biz.nostr.android.demo"
         minSdk 24
+        //noinspection OldTargetApi
+        targetSdkVersion 34
         versionCode 1
         versionName "1.0"
 
