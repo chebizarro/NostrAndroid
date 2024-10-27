@@ -2,14 +2,18 @@ package biz.nostr.android.demo;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
+import java.util.List;
+
+import biz.nostr.R;
 import biz.nostr.android.nip55.IntentBuilder;
+import biz.nostr.android.nip55.Signer;
 
 public class MainActivity extends Activity {
 
@@ -35,8 +39,8 @@ public class MainActivity extends Activity {
     }
 
     private void checkSignerAppInstalled() {
-        boolean isInstalled = IntentBuilder.isExternalSignerInstalled(this, SIGNER_PACKAGE_NAME);
-        if (isInstalled) {
+        List<ResolveInfo> isInstalled = Signer.isExternalSignerInstalled(this, SIGNER_PACKAGE_NAME);
+        if (!isInstalled.isEmpty()) {
             textResult.setText("Signer app is installed.");
         } else {
             textResult.setText("Signer app is not installed.");
@@ -76,6 +80,7 @@ public class MainActivity extends Activity {
         }
 
         if (resultCode == RESULT_OK) {
+            /*
             switch (requestCode) {
                 case REQUEST_CODE_GET_PUBLIC_KEY:
                     NostrResultParser.GetPublicKeyResult result = NostrResultParser.parseGetPublicKeyResult(data);
@@ -94,6 +99,7 @@ public class MainActivity extends Activity {
                     }
                     break;
             }
+            */
         } else {
             textResult.setText("Operation canceled or failed.");
         }
