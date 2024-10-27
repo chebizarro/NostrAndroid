@@ -64,7 +64,7 @@ public class IntentBuilder {
         return intent;
     }
 
-    public static Intent decryptZapEvent(String signerPackageName, String eventJson, String id, String npub) {
+    public static Intent decryptZapEventIntent(String signerPackageName, String eventJson, String id, String npub) {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("nostrsigner:" + eventJson));
             intent.setPackage(signerPackageName);
             intent.putExtra("type", "decrypt_zap_event");
