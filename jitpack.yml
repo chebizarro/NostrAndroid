@@ -2,4 +2,4 @@ jdk:
   - openjdk11
 
 gradle:
-  - 8.1.4
+  - 7.3.1
