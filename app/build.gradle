@@ -9,7 +9,6 @@ android {
     defaultConfig {
         applicationId "biz.nostr.android.demo"
         minSdk 24
-        targetSdk 34
         versionCode 1
         versionName "1.0"
 
@@ -29,7 +28,7 @@ android {
 }
 
 dependencies {
-
+    implementation project(":android")
     implementation libs.appcompat
     implementation libs.material
     testImplementation libs.junit

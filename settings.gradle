@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Nostr Android"
 include ':app'
-include ':nip55'
+include ':android'
