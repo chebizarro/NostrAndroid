@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace 'biz.nostr.android.demo'
-    compileSdk 30
+    compileSdk 34
 
     defaultConfig {
         applicationId "biz.nostr.android.demo"
