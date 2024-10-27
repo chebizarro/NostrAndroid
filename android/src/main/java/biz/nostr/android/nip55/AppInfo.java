@@ -9,10 +9,10 @@ import android.util.Base64;
 import java.io.ByteArrayOutputStream;
 
 public class AppInfo {
-    String name;
-    String packageName;
-    String iconData;
-    String iconUrl;
+    public String name;
+    public String packageName;
+    public String iconData;
+    public String iconUrl;
 
     public AppInfo(CharSequence appName, String packageName, Drawable icon) {
         this.name = appName != null ? appName.toString() : "";
