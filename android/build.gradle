@@ -11,7 +11,7 @@ android {
     compileSdk 34
 
     defaultConfig {
-        minSdk 16
+        minSdk 19
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -24,8 +24,14 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
     }
 }
 
@@ -35,10 +41,6 @@ publishing {
             groupId = group
             artifactId = 'nostr-android'
             version = version
-
-            afterEvaluate {
-                from components.release
-            }
 
             pom {
                 name = 'NIP-55 Android Library'
@@ -75,10 +77,11 @@ publishing {
 }
 
 dependencies {
-
     implementation libs.appcompat
     implementation libs.material
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
+    testImplementation libs.robolectric
+    testImplementation libs.core
 }

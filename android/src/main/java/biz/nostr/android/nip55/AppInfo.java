@@ -9,14 +9,16 @@ import android.util.Base64;
 import java.io.ByteArrayOutputStream;
 
 public class AppInfo {
-    String name;
-    String packageName;
+    public String name;
+    public String packageName;
+    public Drawable icon;
     String iconData;
     String iconUrl;
 
     public AppInfo(CharSequence appName, String packageName, Drawable icon) {
         this.name = appName != null ? appName.toString() : "";
         this.packageName = packageName;
+        this.icon = icon;
         this.iconData = drawableToBase64(icon);
         this.iconUrl = "data:image/png;base64," + this.iconData;
     }

@@ -1,38 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layout_root"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:orientation="vertical"
     android:padding="16dp">
 
     <Button
-        android:id="@+id/button_check_signer"
+        android:id="@+id/button_list_signers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="List Signer Apps"/>
+
+    <LinearLayout
+        android:id="@+id/layout_signer_apps"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Check Signer App Installed" />
+        android:orientation="vertical"
+        android:layout_marginVertical="8dp"/>
+
+    <EditText
+        android:id="@+id/edit_selected_package"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Package Name" />
+
+    <Button
+        android:id="@+id/button_check_signer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Check if Signer is Installed"/>
 
     <Button
         android:id="@+id/button_get_public_key"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Get Public Key" />
+
+    <EditText
+        android:id="@+id/edit_event_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Get Public Key"
-        android:layout_marginTop="16dp" />
+        android:hint="Event Content" />
 
     <Button
         android:id="@+id/button_sign_event"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sign Event" />
+
+    <EditText
+        android:id="@+id/edit_recipient_pubkey"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Sign Event"
-        android:layout_marginTop="16dp" />
+        android:hint="Recipient Public Key" />
+
+    <EditText
+        android:id="@+id/edit_message_to_encrypt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Message to Encrypt" />
+
+    <Button
+        android:id="@+id/button_encrypt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Encrypt Message" />
+
+    <Button
+        android:id="@+id/button_decrypt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Decrypt Message" />
+
+    <Button
+        android:id="@+id/button_decrypt_zap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Decrypt Zap Event" />
+
+    <Button
+        android:id="@+id/button_get_relays"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Get Relays" />
 
     <TextView
         android:id="@+id/text_result"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Result will appear here"
-        android:textSize="16sp"
-        android:layout_marginTop="24dp" />
-
+        android:text="Result..."
+        android:padding="8dp" />
 </LinearLayout>
+</ScrollView>
