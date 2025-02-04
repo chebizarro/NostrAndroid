@@ -1,24 +1,18 @@
 [versions]
-agp = "8.8.0-rc02"
-core = "1.6.1"
-coreVersion = "1.2.0"
+agp = "7.3.1"
 gradle = "7.5.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
 appcompat = "1.6.1"
 material = "1.10.0"
-robolectric = "4.14"
 
 [libraries]
-core = { module = "androidx.test:core", version.ref = "core" }
-core-v120 = { module = "androidx.test:core", version.ref = "coreVersion" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version = "1.6.1" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
-robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -6,12 +6,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Signer {
-
     public static List<ResolveInfo> isExternalSignerInstalled(Context context, String packageName) {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
@@ -33,7 +34,8 @@ public class Signer {
         for (ResolveInfo resolveInfo : resolveInfos) {
             CharSequence appName = resolveInfo.loadLabel(packageManager);
             String packageName = resolveInfo.activityInfo.packageName;
-            AppInfo appInfo = new AppInfo(appName, packageName, resolveInfo.loadIcon(packageManager));
+            Drawable iconDrawable = resolveInfo.loadIcon(packageManager);
+            AppInfo appInfo = new AppInfo(appName, packageName, iconDrawable);
             appsArray.add(appInfo);
         }
         return appsArray;
