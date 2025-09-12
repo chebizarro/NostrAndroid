@@ -28,8 +28,14 @@ public final class NostrUriBuilder {
             for (Map.Entry<String,String> e : query.entrySet()) {
                 String k = e.getKey() == null ? "" : e.getKey();
                 String v = e.getValue() == null ? "" : e.getValue();
-                String encK = URLEncoder.encode(k, "UTF-8");
-                String encV = URLEncoder.encode(v, "UTF-8");
+                String encK;
+                String encV;
+                try {
+                    encK = URLEncoder.encode(k, "UTF-8");
+                    encV = URLEncoder.encode(v, "UTF-8");
+                } catch (Exception ex) {
+                    throw new NostrUriException("Failed to encode query parameter", ex);
+                }
                 if (!first) qsb.append('&');
                 qsb.append(encK).append('=').append(encV);
                 first = false;
