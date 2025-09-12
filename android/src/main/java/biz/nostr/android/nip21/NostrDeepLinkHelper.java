@@ -3,7 +3,6 @@ package biz.nostr.android.nip21;
 import android.content.Intent;
 import android.net.Uri;
 
-import androidx.annotation.Nullable;
 
 import java.util.Map;
 
@@ -14,7 +13,7 @@ public final class NostrDeepLinkHelper {
     private NostrDeepLinkHelper() {}
 
     /** Returns true if the intent is an ACTION_VIEW with scheme nostr:. */
-    public static boolean isNostrDeepLink(@Nullable Intent intent) {
+    public static boolean isNostrDeepLink(Intent intent) {
         if (intent == null) return false;
         if (!Intent.ACTION_VIEW.equals(intent.getAction())) return false;
         Uri data = intent.getData();
@@ -33,7 +32,7 @@ public final class NostrDeepLinkHelper {
     }
 
     /** Build an ACTION_VIEW intent for a given bech32+query. */
-    public static Intent buildViewIntent(final String bech32, @Nullable final Map<String,String> query) throws NostrUriException {
+    public static Intent buildViewIntent(final String bech32, final Map<String,String> query) throws NostrUriException {
         final String uri = NostrUriBuilder.build(bech32, query);
         return new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
     }
