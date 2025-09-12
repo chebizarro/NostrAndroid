@@ -20,6 +20,7 @@ import org.robolectric.Shadows;
 import org.robolectric.android.controller.ContentProviderController;
 import org.robolectric.shadows.ShadowPackageManager;
 
+@RunWith(RobolectricTestRunner.class)
 public class SignerRobolectricTest {
 
     private TestCursorProvider attachProvider(String authority) {
