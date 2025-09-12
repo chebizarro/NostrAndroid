@@ -16,7 +16,7 @@ public class IntentBuilder {
     }
 
     public static Intent signEventIntent(String packageName, String eventJson, String eventId, String npub) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("nostrsigner:" + eventJson));
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("nostrsigner:" + Uri.encode(eventJson)));
         intent.setPackage(packageName);
         intent.putExtra("type", "sign_event");
         intent.putExtra("id", eventId);
@@ -25,47 +25,47 @@ public class IntentBuilder {
     }
 
     public static Intent nip04EncryptIntent(String packageName, String plainText, String id, String npub, String pubKey) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("nostrsigner:" + plainText));
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("nostrsigner:" + Uri.encode(plainText)));
             intent.setPackage(packageName);
             intent.putExtra("type", "nip04_encrypt");
             intent.putExtra("id", id);
             intent.putExtra("current_user", npub);
-            intent.putExtra("pubKey", pubKey);
+            intent.putExtra("pubkey", pubKey);
             return intent;
     }
 
     public static Intent nip44EncryptIntent(String packageName, String plainText, String id, String npub, String pubKey) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("nostrsigner:" + plainText));
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("nostrsigner:" + Uri.encode(plainText)));
             intent.setPackage(packageName);
             intent.putExtra("type", "nip44_encrypt");
             intent.putExtra("id", id);
             intent.putExtra("current_user", npub);
-            intent.putExtra("pubKey", pubKey);
+            intent.putExtra("pubkey", pubKey);
             return intent;
     }
 
     public static Intent nip04DecryptIntent(String packageName, String encryptedText, String id, String npub, String pubKey) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("nostrsigner:" + encryptedText));
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("nostrsigner:" + Uri.encode(encryptedText)));
             intent.setPackage(packageName);
             intent.putExtra("type", "nip04_decrypt");
             intent.putExtra("id", id);
             intent.putExtra("current_user", npub);
-            intent.putExtra("pubKey", pubKey);
+            intent.putExtra("pubkey", pubKey);
             return intent;
     }
 
     public static Intent nip44DecryptIntent(String signerPackageName, String encryptedText, String id, String npub, String pubKey) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("nostrsigner:" + encryptedText));
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("nostrsigner:" + Uri.encode(encryptedText)));
             intent.setPackage(signerPackageName);
             intent.putExtra("type", "nip44_decrypt");
             intent.putExtra("id", id);
             intent.putExtra("current_user", npub);
-            intent.putExtra("pubKey", pubKey);
+            intent.putExtra("pubkey", pubKey);
         return intent;
     }
 
     public static Intent decryptZapEventIntent(String signerPackageName, String eventJson, String id, String npub) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("nostrsigner:" + eventJson));
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("nostrsigner:" + Uri.encode(eventJson)));
             intent.setPackage(signerPackageName);
             intent.putExtra("type", "decrypt_zap_event");
             intent.putExtra("id", id);
@@ -79,6 +79,14 @@ public class IntentBuilder {
         intent.putExtra("type", "get_relays");
         intent.putExtra("id", id);
         intent.putExtra("current_user", npub);
+        return intent;
+    }
+
+    // Helper to apply singleTop flags when batching interactive flows
+    public static Intent withSingleTopFlags(Intent intent) {
+        if (intent != null) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        }
         return intent;
     }
 }

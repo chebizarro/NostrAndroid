@@ -16,7 +16,7 @@ An Android library that provides implementations of Nostr Improvement Proposals 
 
 The Nostr Android Library enables Android applications to interact with the [Nostr](https://nostr.com/) decentralized protocol by providing native implementations of Nostr Improvement Proposals (NIPs). The library is designed to be modular and easily integrated into cross-platform toolkits such as Capacitor or Flutter, as well as into existing Android projects.
 
-Currently, the library implements [NIP-55](https://github.com/nostr-protocol/nips/blob/master/55.md), which defines the protocol for application-level signing of Nostr events.
+Currently, the library implements [NIP-55](https://github.com/nostr-protocol/nips/blob/master/55.md), which defines the protocol for application-level signing of Nostr events and data exchange with Android signer apps.
 
 ## Features
 
@@ -26,19 +26,9 @@ Currently, the library implements [NIP-55](https://github.com/nostr-protocol/nip
 
 ## Installation
 
-### Gradle
+### JitPack (recommended during development)
 
-Add the library to your project's `build.gradle` dependencies:
-
-```gradle
-dependencies {
-    implementation 'biz.nostr:nip55:1.0.0'
-}
-```
-
-### JitPack (If using JitPack)
-
-If the library is hosted on JitPack, add the JitPack repository to your root `build.gradle`:
+Add the JitPack repository to your root `build.gradle` (top-level):
 
 ```gradle
 allprojects {
@@ -50,88 +40,88 @@ allprojects {
 }
 ```
 
-Then add the dependency:
+Then add the dependency to your Android module:
 
 ```gradle
 dependencies {
-    implementation 'com.github.chebizarro:nostr-android-library:1.0.0'
+    implementation 'com.github.chebizarro:NostrAndroid:<tag-or-SHA>'
+}
+```
+
+### Maven Central (if published)
+
+```gradle
+dependencies {
+    implementation 'biz.nostr:nostr-android:1.0.0'
 }
 ```
 
 ## Usage
 
-### Initializing the Library
+### Library Access
+
+`Signer` and `IntentBuilder` expose static methods.
 
 ```java
-import biz.nostr.nip55.Signer;
-
-Signer signer = new Signer(context);
+import biz.nostr.android.nip55.Signer;
+import biz.nostr.android.nip55.IntentBuilder;
 ```
 
-### Getting the Public Key
+### Using ContentResolver (background) — NIP-55
+
+These calls should be done off the main thread.
 
 ```java
-try {
-    String publicKey = signer.getPublicKey();
-    // Use the public key as needed
-} catch (Exception e) {
-    // Handle exception
-}
+String packageName = /* previously selected signer package, e.g., from interactive get_public_key */;
+String npub = Signer.getPublicKey(context, packageName); // returns null if not remembered or rejected
+
+String[] signed = Signer.signEvent(context, packageName, eventJson, currentUserNpub);
+// signed[0] = result (signature), signed[1] = event (signed event JSON)
+
+String enc = Signer.nip04Encrypt(context, packageName, plainText, recipientHexPubKey, currentUserNpub);
+String dec = Signer.nip04Decrypt(context, packageName, encryptedText, senderHexPubKey, currentUserNpub);
+
+String enc44 = Signer.nip44Encrypt(context, packageName, plainText, recipientHexPubKey, currentUserNpub);
+String dec44 = Signer.nip44Decrypt(context, packageName, encryptedText, senderHexPubKey, currentUserNpub);
+
+String zapEventJson = Signer.decryptZapEvent(context, packageName, eventJson, currentUserNpub);
+String relaysJson = Signer.getRelays(context, packageName, currentUserNpub);
 ```
 
-### Signing an Event
+### Using Intents (interactive) — NIP-55
 
 ```java
-String eventJson = "{ \"content\": \"Hello, Nostr!\" ... }";
-try {
-    String signedEvent = signer.signEvent(eventJson);
-    // Use the signed event as needed
-} catch (Exception e) {
-    // Handle exception
-}
+// First, discover if any signer is installed
+boolean hasSigner = Signer.isExternalSignerInstalled(context);
+
+// Request public key interactively (with optional permissions JSON)
+String permissionsJson = "[ {\"type\":\"sign_event\",\"kind\":22242}, {\"type\":\"nip44_decrypt\"} ]";
+Intent getPk = IntentBuilder.getPublicKeyIntent("com.example.signer", permissionsJson);
+// Optionally add singleTop flags when batching
+IntentBuilder.withSingleTopFlags(getPk);
+activityResultLauncher.launch(getPk);
+
+// Sign event interactively
+Intent sign = IntentBuilder.signEventIntent("com.example.signer", eventJson, eventId, currentUserNpub);
+IntentBuilder.withSingleTopFlags(sign);
+activityResultLauncher.launch(sign);
 ```
+
+On result, per NIP-55, read extras: `result`, `id`, and optionally `event` for `sign_event`.
 
 ## API Reference
 
-### NostrPlugin
+### API Reference (subset)
 
 #### Constructor
 
-```java
-Signer()
-```
+Key static methods (see source `android/src/main/java/biz/nostr/android/nip55/Signer.java`):
 
-Creates a new instance of the `NostrPlugin` class.
-
-#### Methods
-
-- `String getPublicKey()`
-
-  Retrieves the user's public key.
-
-  **Returns:**
-
-    - The public key as a string.
-
-  **Throws:**
-
-    - `Exception` if the public key cannot be retrieved.
-
-- `String signEvent(String eventJson)`
-
-  Signs a Nostr event represented as a JSON string.
-
-  **Parameters:**
-
-    - `eventJson`: A JSON string representing the event to be signed.
-
-  **Returns:**
-
-    - The signed event as a JSON string.
-
-  **Throws:**
-
-    - `Exception` if the event cannot be signed.
+- `List<ResolveInfo> isExternalSignerInstalled(Context, String)` and `boolean isExternalSignerInstalled(Context)`
+- `boolean isSignerPackageAvailable(Context, String)`
+- `String getPublicKey(Context, String packageName)` — returns result (npub) or null
+- `String[] signEvent(Context, String packageName, String eventJson, String currentUserNpub)` — returns { result, event } or null
+- `String nip04Encrypt/Decrypt(...)`, `String nip44Encrypt/Decrypt(...)`, `String decryptZapEvent(...)`, `String getRelays(...)` — return result or null
 
 ## Contributing
 
@@ -180,17 +170,40 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ### Dependencies
 
-- **Android SDK**: API Level 24 or higher
-- **Java Version**: Java 8 or higher
+- **Android SDK**: minSdk 21+, compileSdk 34
+- **Java Version**: Java 8
 
 ### Supported Platforms
 
 - **Android**: Supported
 - **Cross-Platform Toolkits**: Compatible with Capacitor, Flutter, and others
 
-### Permissions
+### Permissions (NIP-55)
 
-Ensure that any required permissions are declared in your application's `AndroidManifest.xml` file.
+Permissions are represented as a JSON array of objects: `[{ "type": string, "kind"?: number }]`.
+
+Examples:
+
+- TypeScript / Capacitor / React Native
+```ts
+type Permission = { type: string; kind?: number };
+const permissions: Permission[] = [
+  { type: 'sign_event', kind: 22242 },
+  { type: 'nip44_decrypt' },
+];
+const permissionsJson = JSON.stringify(permissions);
+```
+
+- Flutter / Dart
+```dart
+class Permission {
+  final String type; final int? kind; const Permission(this.type, {this.kind});
+  Map<String, dynamic> toJson() => { 'type': type, if (kind != null) 'kind': kind };
+}
+final permissionsJson = jsonEncode([Permission('sign_event', kind: 22242).toJson()]);
+```
+
+Pass `permissionsJson` to `IntentBuilder.getPublicKeyIntent(packageName, permissionsJson)`.
 
 ### Building the Library
 
@@ -219,9 +232,111 @@ If you need to build the library locally:
 
 To use the library in cross-platform plugins:
 
-- **Flutter**: Add the library as a dependency in your Flutter plugin's `build.gradle` file.
-- **Capacitor**: Include the library in your Capacitor plugin's Android module.
+- **Flutter**: Add the dependency to the Android module of your plugin and forward method calls/permissions JSON.
+- **Capacitor / React Native**: Serialize permissions and other parameters at the JS/TS boundary and pass strings to Android.
+
+### Troubleshooting
+
+- No signer found: ensure you added the `queries` section in your app manifest per NIP-55 and check `Signer.isExternalSignerInstalled(context)`.
+- Wrong results from provider: ensure the signer packageName is validated and constant between calls; store the package from the initial interactive `get_public_key` response.
+- Intent payload corrupted: use `IntentBuilder` methods that URI-encode payloads.
+- Publishing/consumption issues on JitPack: pin a git tag or SHA. For Maven Central, ensure you’re using the documented coordinates.
+
+### Compatibility
+
+Some older signer implementations may return a legacy column name `signature` instead of the NIP-55-compliant `result`.
+
+This library prefers `result` and will transparently fall back to `signature` when `result` is absent. You can enable a debug log when the legacy fallback is taken:
+
+```java
+// Optional: enable to log when legacy 'signature' column is used
+biz.nostr.android.nip55.Signer.setLegacyFallbackLogging(true);
+```
 
 ---
 
 Thank you for using the Nostr Android Library!
+
+## NIP-21: nostr: URI scheme (Android)
+
+This library includes a Java-only implementation for parsing and building `nostr:` URIs (NIP-21). It is dependency-free and framework-agnostic.
+
+### Parse a NIP-21 URI
+
+```java
+import biz.nostr.android.nip21.NostrUri;
+import biz.nostr.android.nip21.NostrUriParser;
+
+NostrUri u = NostrUriParser.parse("nostr:npub1sn0wdenkukak0d9dfczzeacvhkrgz92ak56egt7vdgzn8pv2wfqqhrjdv9");
+// u.getKind() == NostrUri.Kind.NPUB
+// u.getBech32() == "npub1sn0wdenkukak0d9dfczzeacvhkrgz92ak56egt7vdgzn8pv2wfqqhrjdv9"
+// u.getQuery().isEmpty() == true
+```
+
+With a query string:
+
+```java
+NostrUri u = NostrUriParser.parse("nostr:note1fntxtkcy9...?...&relay=wss%3A%2F%2Frelay.example");
+String relay = u.getQuery().get("relay"); // "wss://relay.example"
+```
+
+Safety: `nsec` is rejected by design.
+
+### Build a NIP-21 URI
+
+```java
+import biz.nostr.android.nip21.NostrUriBuilder;
+
+String s1 = NostrUriBuilder.build("npub1abcd...");                  // "nostr:npub1abcd..."
+Map<String,String> q = new java.util.HashMap<>();
+q.put("relay", "wss://ex.com");
+String s2 = NostrUriBuilder.build("nevent1xyz...", q); // "nostr:nevent1xyz...?relay=wss%3A%2F%2Fex.com"
+```
+
+### Android Deep Link Helper
+
+```java
+import biz.nostr.android.nip21.NostrDeepLinkHelper;
+
+boolean isNostr = NostrDeepLinkHelper.isNostrDeepLink(intent);
+NostrUri parsed = NostrDeepLinkHelper.parseFromIntent(intent);
+Intent view = NostrDeepLinkHelper.buildViewIntent("note1...", java.util.Collections.singletonMap("relay", "wss://relay.example"));
+```
+
+### Manifest snippets (host app)
+
+Add a `queries` block to discover nostr handlers:
+
+```xml
+<queries>
+  <intent>
+    <action android:name="android.intent.action.VIEW" />
+    <category android:name="android.intent.category.BROWSABLE" />
+    <data android:scheme="nostr" />
+  </intent>
+  <!-- existing nostrsigner queries may already be present -->
+  <intent>
+    <action android:name="android.intent.action.VIEW" />
+    <category android:name="android.intent.category.BROWSABLE" />
+    <data android:scheme="nostrsigner" />
+  </intent>
+  
+</queries>
+```
+
+In your activity to receive deep links:
+
+```xml
+<intent-filter>
+  <action android:name="android.intent.action.VIEW" />
+  <category android:name="android.intent.category.DEFAULT" />
+  <category android:name="android.intent.category.BROWSABLE" />
+  <data android:scheme="nostr" />
+  <!-- optionally host/path filters if you choose to support http(s) indirection -->
+</intent-filter>
+```
+
+Notes:
+
+- `nsec` is blocked and will throw an exception when parsed or built.
+- This module performs minimal bech32 shape validation and classifies by prefix; no TLV decoding is performed here.
