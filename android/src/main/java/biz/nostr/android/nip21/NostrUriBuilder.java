@@ -25,15 +25,18 @@ public final class NostrUriBuilder {
         final StringBuilder sb = new StringBuilder("nostr:");
         sb.append(trimmed);
         if (query != null && !query.isEmpty()) {
-            StringJoiner joiner = new StringJoiner("&");
+            StringBuilder qsb = new StringBuilder();
+            boolean first = true;
             for (Map.Entry<String,String> e : query.entrySet()) {
                 String k = e.getKey() == null ? "" : e.getKey();
                 String v = e.getValue() == null ? "" : e.getValue();
                 String encK = URLEncoder.encode(k, StandardCharsets.UTF_8);
                 String encV = URLEncoder.encode(v, StandardCharsets.UTF_8);
-                joiner.add(encK + "=" + encV);
+                if (!first) qsb.append('&');
+                qsb.append(encK).append('=').append(encV);
+                first = false;
             }
-            sb.append('?').append(joiner.toString());
+            sb.append('?').append(qsb.toString());
         }
         return sb.toString();
     }
