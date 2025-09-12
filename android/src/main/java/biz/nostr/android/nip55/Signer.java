@@ -321,4 +321,13 @@ public class Signer {
         }
     }
 
+    // Normalize provider-returned JSON-like strings that escape quotes, e.g., {\"id\":\"abc\"}
+    private static String unescapeJson(String s) {
+        if (s == null) return null;
+        // First reduce escaped backslashes, then unescape quotes
+        String out = s.replace("\\\\", "\\");
+        out = out.replace("\\\"", "\"");
+        return out;
+    }
+
 }
