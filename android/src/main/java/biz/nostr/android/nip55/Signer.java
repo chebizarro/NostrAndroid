@@ -23,11 +23,16 @@ public class Signer {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
         intent.setData(Uri.parse("nostrsigner:"));
-        if (packageName != null) {
-            intent.setPackage(packageName);
-        }
         PackageManager packageManager = context.getPackageManager();
-        return packageManager.queryIntentActivities(intent, 0);
+        List<ResolveInfo> all = packageManager.queryIntentActivities(intent, 0);
+        if (packageName == null || packageName.isEmpty()) return all;
+        List<ResolveInfo> filtered = new ArrayList<>();
+        for (ResolveInfo ri : all) {
+            if (ri.activityInfo != null && packageName.equals(ri.activityInfo.packageName)) {
+                filtered.add(ri);
+            }
+        }
+        return filtered;
     }
 
     public static boolean isExternalSignerInstalled(Context context) {
@@ -116,7 +121,7 @@ public class Signer {
 
                 if (sigIdx >= 0 && eventIndex >= 0) {
                     String signature = result.getString(sigIdx);
-                    String signedEventJson = result.getString(eventIndex);
+                    String signedEventJson = unescapeJson(result.getString(eventIndex));
                     signedEvent = new String[]{signature, signedEventJson};
                 }
             }
@@ -275,7 +280,7 @@ public class Signer {
                     if (LEGACY_FALLBACK_LOG && index >= 0) Log.d("NIP55", "Using legacy column 'signature' for decryptZapEvent");
                 }
                 if (index >= 0) {
-                    decryptedEventJson = result.getString(index);
+                    decryptedEventJson = unescapeJson(result.getString(index));
                 }
             }
             return decryptedEventJson;

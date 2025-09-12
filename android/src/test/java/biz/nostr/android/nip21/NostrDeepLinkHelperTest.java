@@ -6,10 +6,13 @@ import android.content.Intent;
 import android.net.Uri;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@RunWith(RobolectricTestRunner.class)
 public class NostrDeepLinkHelperTest {
 
     @Test
