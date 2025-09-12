@@ -1,9 +1,7 @@
 package biz.nostr.android.nip21;
 
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
-import java.util.StringJoiner;
 
 /**
  * Builder for NIP-21 nostr: URIs.
@@ -30,8 +28,8 @@ public final class NostrUriBuilder {
             for (Map.Entry<String,String> e : query.entrySet()) {
                 String k = e.getKey() == null ? "" : e.getKey();
                 String v = e.getValue() == null ? "" : e.getValue();
-                String encK = URLEncoder.encode(k, StandardCharsets.UTF_8);
-                String encV = URLEncoder.encode(v, StandardCharsets.UTF_8);
+                String encK = URLEncoder.encode(k, "UTF-8");
+                String encV = URLEncoder.encode(v, "UTF-8");
                 if (!first) qsb.append('&');
                 qsb.append(encK).append('=').append(encV);
                 first = false;
