@@ -28,23 +28,41 @@ Currently, the library implements [NIP-55](https://github.com/nostr-protocol/nip
 
 ### JitPack (recommended during development)
 
-Add the JitPack repository to your root `build.gradle` (top-level):
+Add the JitPack repository (choose one style depending on your Gradle layout):
+
+Option A — `settings.gradle` (newer projects)
 
 ```gradle
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-        maven { url 'https://jitpack.io' }
-    }
+dependencyResolutionManagement {
+  repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+  repositories {
+    google()
+    mavenCentral()
+    maven { url "https://jitpack.io" }
+  }
 }
 ```
 
-Then add the dependency to your Android module:
+Note: JitPack will honor the coordinates defined by the project's POM (`groupId`, `artifactId`, `version`).
+
+Option B — root `build.gradle` (older projects)
+
+```gradle
+allprojects {
+  repositories {
+    google()
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+  }
+}
+```
+
+Then add the dependency to your Android app/module. This repo publishes the Gradle submodule `:android`, but the published artifactId is set to `nostr-android` via Maven Publish:
 
 ```gradle
 dependencies {
-    implementation 'com.github.chebizarro:NostrAndroid:<tag-or-SHA>'
+  // Use a git tag or commit SHA. Example for v2.0.0:
+  implementation 'biz.nostr:nostr-android:2.0.0'
 }
 ```
 
